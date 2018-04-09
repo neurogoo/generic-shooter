@@ -23,7 +23,7 @@
 
 (defn reset-game
   []
-  (reset! state {:status :running})
+  (reset! state {:status :running :running/pausetimer 0})
   (b/reset-bullets)
   (bk/create-background)
   (pl/reset-player)
@@ -34,19 +34,26 @@
 
 (defn pause-game
   []
-  (swap! state (fn [s] (assoc s :status :paused))))
+  (swap! state
+         (fn [s]
+           (-> s
+               (assoc :status :paused)
+               (assoc :paused/timer 0)))))
 
 (defn continue-game
   []
-  (swap! state (fn [s] (assoc s :status :running))))
+  (swap! state (fn [s] (-> s
+                           (assoc :status :running)
+                           (assoc :running/pausetimer 0)
+                           (assoc :paused/timer 0)))))
 
 (defn draw-gameplay
   []
   [[:fill {:color "lightblue"}
     [:rect {:x 0 :y 0 :width 300 :height 300}]]
+   (draw-items @bk/pixels "red")
    [:fill {:color "white"}
     (u/draw @pl/player)]
-   (draw-items @bk/pixels "red")
    (draw-items @b/bullets "black")
    (draw-items @e/enemies "white")
    (draw-items @eb/enemy-bullets "white")
@@ -76,6 +83,19 @@
             :y 100
             :size 16
             :font "Georgia"}]]])
+
+(defn draw-game-win-screen
+  []
+  [[:fill {:color "white"}
+    [:rect {:x 40 :y 50 :width 220 :height 100}]]
+   [:fill
+    {:color "black"}
+    [:text {:value "YOU WON! Press R to restart"
+            :x 50
+            :y 100
+            :size 16
+            :font "Georgia"}]]])
+
 
 (defn check-player-enemy-collision
   []
@@ -144,6 +164,13 @@
     ; runs every time a frame must be drawn (about 60 times per sec)
     (on-render [this]
       (case (:status @state)
+        :game-win
+        (do
+          (p/render game (into [] (concat (draw-gameplay) (draw-game-win-screen))))
+          (let [pressed-keys (p/get-pressed-keys game)]
+            (cond
+              (contains? pressed-keys u/RESET)
+              (reset-game))))
         :game-over
         (do
           (p/render game (into [] (concat (draw-gameplay) (draw-game-over-screen))))
@@ -154,10 +181,14 @@
         :paused
         (do
           (p/render game (into [] (concat (draw-gameplay) (draw-pause-screen))))
-          (let [pressed-keys (p/get-pressed-keys game)]
-            (cond
-              (contains? pressed-keys u/ENTER)
-              (continue-game))))
+          (let [pressed-keys (p/get-pressed-keys game)
+                delta-time (p/get-delta-time game)
+                timer (:paused/timer @state)]
+            (if (> (+ timer delta-time) 500)
+                (cond
+                  (contains? pressed-keys u/ENTER)
+                  (continue-game))
+                (swap! state (fn [s] (assoc s :paused/timer (+ timer delta-time)))))))
         :running
         (do
           (p/render game (draw-gameplay))
@@ -179,8 +210,11 @@
           (let [delta-time (p/get-delta-time game)]
             (bk/check-timer delta-time)
             (e/check-timer delta-time)
-            (l/check-timer delta-time))
-          (let [pressed-keys (p/get-pressed-keys game)]
+            (l/check-timer delta-time)
+            (pl/check-timer delta-time))
+          (let [pressed-keys (p/get-pressed-keys game)
+                delta-time (p/get-delta-time game)
+                pausetimer (:running/pausetimer @state)]
             (cond
               (contains? pressed-keys u/LEFT_ARROW)
               (pl/move-left)
@@ -192,11 +226,14 @@
               (pl/move-down))
             (cond
               (contains? pressed-keys u/SPACE)
-              (b/create-bullet @pl/player)
+              (pl/shoot-bullet)
               (contains? pressed-keys u/RESET)
               (reset-game)
-              (contains? pressed-keys u/ENTER)
-              (pause-game))))))))
+              (and (contains? pressed-keys u/ENTER) (> pausetimer 500))
+              (pause-game))
+            (swap! state (fn [s] (assoc s :running/pausetimer (+ pausetimer delta-time)))))
+          (if (= :game-win (l/check-game-win))
+            (swap! state (fn [s] (assoc s :status :game-win)))))))))
 
 ; start the game
 (doto game

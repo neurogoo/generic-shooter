@@ -16,11 +16,19 @@
           :x x
           :y y}))
 
-(defn create-horizontal-enemy-bullet
+(defn create-horizontal-right-enemy-bullet
   [{:keys [x y]}]
   (swap! enemy-bullets conj
          {:Item :Enemy/Bullet
-          :Movement :Enemy/Horizontal
+          :Movement :Enemy/Horizontal-Right
+          :x x
+          :y y}))
+
+(defn create-horizontal-left-enemy-bullet
+  [{:keys [x y]}]
+  (swap! enemy-bullets conj
+         {:Item :Enemy/Bullet
+          :Movement :Enemy/Horizontal-Left
           :x x
           :y y}))
 
@@ -46,6 +54,10 @@
   [bullet]
   (update bullet :y (fn [y] (+ y 5))))
 
-(defmethod u/move :Enemy/Horizontal
+(defmethod u/move :Enemy/Horizontal-Right
   [bullet]
   (update bullet :x (fn [x] (+ x 5))))
+
+(defmethod u/move :Enemy/Horizontal-Left
+  [bullet]
+  (update bullet :x (fn [x] (- x 5))))

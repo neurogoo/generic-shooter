@@ -26,7 +26,10 @@
           (remove #(= :down (u/outside-screen-side (:x %) (:y %))))))))
 
 (defmethod u/draw :Enemy [{:keys [x y radius]}]
-  [:ellipse {:x x, :y y, :width (* 2 radius), :height (* 2 radius)}])
+  [:animation
+   {:duration 200}
+   [:ellipse {:x x, :y y, :width (* 2 radius), :height (* 2 radius)}]
+   [:ellipse {:x x, :y y, :width (* 1.8 radius), :height (* 1.8 radius)}]])
 
 (defmethod u/bounding-box :Enemy [{:keys [x y radius]}]
   (let [width (* 2 radius)
@@ -70,13 +73,40 @@
     (-> enemy
         (assoc :y new-y))))
 
+(defmethod u/move :Enemy/South-East
+  [enemy total-time]
+  (let [x-add 1
+        y-add 1
+        x (:x enemy)
+        y (:y enemy)
+        new-x (- x x-add)
+        new-y (+ y y-add)]
+    (-> enemy
+        (assoc :x new-x)
+        (assoc :y new-y))))
+
+(defmethod u/move :Enemy/North-West
+  [enemy total-time]
+  (let [x-add 1
+        y-add 1
+        x (:x enemy)
+        y (:y enemy)
+        new-x (+ x x-add)
+        new-y (+ y y-add)]
+    (-> enemy
+        (assoc :x new-x)
+        (assoc :y new-y))))
+
 (defmulti shoot :Shootingstyle)
 
 (defmethod shoot :default [enemy]
   (eb/create-regular-enemy-bullet enemy))
 
-(defmethod shoot :Vertical [enemy]
-  (eb/create-horizontal-enemy-bullet enemy))
+(defmethod shoot :Vertical-Right [enemy]
+  (eb/create-horizontal-right-enemy-bullet enemy))
+
+(defmethod shoot :Vertical-Left [enemy]
+  (eb/create-horizontal-left-enemy-bullet enemy))
 
 (defn check-timer
   [delta-time]

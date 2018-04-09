@@ -1,5 +1,6 @@
 (ns play-cljs-test.player
-  (:require [play-cljs-test.utils :as u]))
+  (:require [play-cljs-test.utils :as u]
+            [play-cljs-test.bullet :as b]))
 
 (def STEP_SIZE 5)
 
@@ -9,7 +10,8 @@
          :score 0
          :lives 3
          :x 140
-         :y 280}))
+         :y 280
+         :shoot-timer 0}))
 
 (defn reset-player []
   (reset! player {:Item :Player
@@ -17,7 +19,8 @@
                   :score 0
                   :lives 3
                   :x 140
-                  :y 280}))
+                  :y 280
+                  :shoot-timer 0}))
 
 (defmethod u/draw :Player
   [player]
@@ -99,3 +102,13 @@
   (swap! player
          (fn [p]
            (update p :score #(+ score %)))))
+
+(defn check-timer
+  [delta-time]
+  (swap! player (fn [p] (update p :shoot-timer #(+ % delta-time)))))
+
+(defn shoot-bullet
+  []
+  (when (> (:shoot-timer @player) 50)
+    (swap! player (fn [p] (assoc p :shoot-timer 0)))
+    (b/create-bullet @player)))

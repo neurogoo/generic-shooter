@@ -72,9 +72,9 @@
 (defn outside-screen-side
   [x y]
   (cond
+    (> y SCREEN-HEIGHT) :down
     (> x SCREEN-WIDTH) :right
     (< x 0) :left
-    (> y SCREEN-HEIGHT) :down
     (< y 0) :up
     :else false))
 
