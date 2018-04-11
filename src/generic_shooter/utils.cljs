@@ -1,4 +1,4 @@
-(ns play-cljs-test.utils)
+(ns generic-shooter.utils)
 
 (enable-console-print!)
 

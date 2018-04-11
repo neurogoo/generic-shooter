@@ -1,5 +1,5 @@
-(ns play-cljs-test.background
-  (:require [play-cljs-test.utils :as u]))
+(ns generic-shooter.background
+  (:require [generic-shooter.utils :as u]))
 
 (def timer (atom 0))
 

@@ -1,5 +1,5 @@
-(ns play-cljs-test.enemybullet
-  (:require [play-cljs-test.utils :as u]))
+(ns generic-shooter.enemybullet
+  (:require [generic-shooter.utils :as u]))
 
 (def enemy-bullets
   (atom []))

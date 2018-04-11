@@ -1,12 +1,12 @@
-(ns play-cljs-test.core
+(ns generic-shooter.core
   (:require [play-cljs.core :as p]
-            [play-cljs-test.bullet :as b]
-            [play-cljs-test.player :as pl]
-            [play-cljs-test.utils :as u]
-            [play-cljs-test.enemies :as e]
-            [play-cljs-test.background :as bk]
-            [play-cljs-test.enemybullet :as eb]
-            [play-cljs-test.level :as l]))
+            [generic-shooter.bullet :as b]
+            [generic-shooter.player :as pl]
+            [generic-shooter.utils :as u]
+            [generic-shooter.enemies :as e]
+            [generic-shooter.background :as bk]
+            [generic-shooter.enemybullet :as eb]
+            [generic-shooter.level :as l]))
 (enable-console-print!)
 
 (defonce game (p/create-game u/SCREEN-WIDTH u/SCREEN-HEIGHT))

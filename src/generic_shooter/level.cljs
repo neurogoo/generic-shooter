@@ -1,6 +1,6 @@
-(ns play-cljs-test.level
-  (:require [play-cljs-test.utils :as u]
-            [play-cljs-test.enemies :as e]))
+(ns generic-shooter.level
+  (:require [generic-shooter.utils :as u]
+            [generic-shooter.enemies :as e]))
 
 (def timer (atom 0))
 

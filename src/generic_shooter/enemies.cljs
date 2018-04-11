@@ -1,6 +1,6 @@
-(ns play-cljs-test.enemies
-  (:require [play-cljs-test.utils :as u]
-            [play-cljs-test.enemybullet :as eb]))
+(ns generic-shooter.enemies
+  (:require [generic-shooter.utils :as u]
+            [generic-shooter.enemybullet :as eb]))
 (enable-console-print!)
 
 (def timer (atom 0))

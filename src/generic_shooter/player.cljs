@@ -1,6 +1,6 @@
-(ns play-cljs-test.player
-  (:require [play-cljs-test.utils :as u]
-            [play-cljs-test.bullet :as b]))
+(ns generic-shooter.player
+  (:require [generic-shooter.utils :as u]
+            [generic-shooter.bullet :as b]))
 
 (def STEP_SIZE 5)
 
