@@ -2,7 +2,7 @@
 
 Base for 2d shooter written in Futurice Code Camp 2018
 
-![](https://github.com/neurogoo/generic-shooter/blob/master/resources/generic-shooter.gif)
+![Generic Shooter](https://github.com/neurogoo/generic-shooter/blob/master/resources/generic_shooter.gif)
 
 ## Setup
 
