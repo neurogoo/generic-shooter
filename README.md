@@ -1,6 +1,8 @@
 # generic-shooter
 
-Base for 2d shooter writen in Futurice Code Camp 2018
+Base for 2d shooter written in Futurice Code Camp 2018
+
+![](https://github.com/neurogoo/generic-shooter/blob/master/resources/generic-shooter.gif)
 
 ## Setup
 
